@@ -67,9 +67,10 @@ export function FormLogin() {
             <section className="bg-gray-50 min-h-screen flex items-center justify-center">
                 <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-4xl p-5 items-center">
                     <div className="px-8 md:px-14">
+                        <p className="text-gray-500 font-bold">Testing account: </p>
+                        <p className="mb-2 text-gray-500">admin@gmail.com - admin123</p>
                         <h2 className="font-bold text-2xl text-[#63d7b0]">Login</h2>
-                        <p className="text-xs mt-4 text-[#63d7b0] mb-10">If you are already a member, easily log in</p>
-
+                        <p className="text-xs mt-4 text-[#63d7b0] mb-5">If you are already a member, easily log in</p>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
                                 <FormField
