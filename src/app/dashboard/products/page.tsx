@@ -10,7 +10,6 @@ async function getData(): Promise<Sales[]> {
 
     const res = await getProducts("")
     return res.data
-
 }
 
 const Page = async () => {

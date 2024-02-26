@@ -16,15 +16,15 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
-import ColorSelect from "./ColorSelect"
-
 import { CldUploadWidget } from "next-cloudinary"
 import { MdDelete } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { CardContent, Card } from '@/components/ui/card';
-import { addProduct } from "@/app/actions"
+import { updateProduct } from "@/app/actions"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
+import ColorSelect from "../../add/ColorSelect"
+import { Colors, addProductProps } from "@/types/types"
 
 const formSchema = z.object({
     title: z.string().min(2),
@@ -34,7 +34,7 @@ const formSchema = z.object({
     quantity: z.string(),
     colors: z.any(),
     tags: z.string(),
-    sale: z.enum(["0", "10", "20", "30", "40"]),
+    sale: z.string(),
 })
 
 const options = [
@@ -50,24 +50,47 @@ interface ImagesDataProps {
 }
 
 
-export function FormAddProduct() {
+
+export function FormEditProduct({ data, id }: {
+    data: addProductProps,
+    id: string
+}) {
+
+    const oldSizeSelects = data?.sizes.map((item: string) => {
+        return {
+            label: item.toUpperCase(),
+            value: item
+        }
+    })
+
+    const oldColorSelects = data?.colors.map((item: Colors) => {
+        return item
+    })
+
+    const oldImageSelects: ImagesDataProps[] = data?.images.map((item: string, i: number) => {
+        return {
+            filename: `image-${i}.jpg`,
+            image: item
+        }
+    })
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            sizes: [],
-            description: "",
-            price: "",
-            quantity: "",
-            colors: [],
-            tags: "",
-            sale: "0",
+            title: data.title,
+            sizes: oldSizeSelects,
+            description: data.description,
+            price: data.price.toString(),
+            quantity: data.quantity.toString(),
+            colors: oldColorSelects,
+            tags: data.tags.toString(),
+            sale: data.sale.toString(),
         },
     })
 
     const [isMounted, setIsMounted] = useState(false);
-    const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>([]);
+    const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>(oldImageSelects);
 
     const router = useRouter()
 
@@ -91,12 +114,14 @@ export function FormAddProduct() {
             price: Number(values?.price),
             quantity: Number(values?.quantity),
             sale: Number(values?.sale),
-            tags: values.tags.split(", "),
+            tags: values.tags.split(","),
             colors: colorData,
             images: productImages
         }
 
-        const res = await addProduct(newData)
+        console.log(newData)
+        const res = await updateProduct(id, newData)
+        console.log(res)
         if (res.error) {
             toast.error(res.error.message, {
                 theme: "colored"
@@ -108,7 +133,6 @@ export function FormAddProduct() {
                 theme: "colored"
             })
             router.push("/dashboard/products")
-            form.reset();
         }
     }
     const onupload = (result: any) => {

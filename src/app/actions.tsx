@@ -33,6 +33,20 @@ export async function addProduct(body: addProductProps) {
     return data
 }
 
+export async function updateProduct(id: string, body: addProductProps) {
+    const res = await fetch(`${baseUrl}api/products/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify(body)
+    })
+    revalidatePath("/dashboard/products")
+    const data = await res.json();
+    return data
+}
+
 export async function deleteColor(id: string) {
     const res = await fetch(`${baseUrl}api/colors/${id}`, {
         method: "DELETE",

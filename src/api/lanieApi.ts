@@ -54,6 +54,17 @@ export async function getProducts(search: string) {
     const data = await res.json();
     return data
 }
+export async function getOneProduct(id: string) {
+    const res = await fetch(`${baseUrl}api/products/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + token,
+        },
+    })
+    const data = await res.json();
+    return data
+}
 
 export async function getCollections() {
     const res = await fetch(`${baseUrl}api/collections`, {

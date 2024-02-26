@@ -16,6 +16,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 async function handleDelete(row: any) {
     const res = await deleteProduct(row.row.original._id)
@@ -67,10 +68,13 @@ export const columns: ColumnDef<Sales>[] = [
         accessorKey: "edit",
         header: "Action",
         cell: (row) => (
-            <Button size={"sm"} className="flex items-center space-x-1">
-                <MdEdit color="#fcba03" />
-                <span>Edit</span>
-            </Button>
+            <Link href={`/dashboard/products/edit/${row.row.original._id}`}>
+                <Button size={"sm"} className="flex items-center space-x-1">
+                    <MdEdit color="#fcba03" />
+                    <span>Edit</span>
+                </Button>
+            </Link>
+
         )
     }
     ,
