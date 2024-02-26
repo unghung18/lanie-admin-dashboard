@@ -92,7 +92,9 @@ export const columns: ColumnDef<Collections>[] = [
                                 Close
                             </Button>
                         </DialogClose>
-                        <Button type="submit" onClick={() => handleDelete(row)}>Confirm</Button >
+                        <DialogClose asChild>
+                            <Button type="submit" onClick={() => handleDelete(row)}>Confirm</Button >
+                        </DialogClose>
                     </DialogFooter>
                 </DialogContent>
             </Dialog >

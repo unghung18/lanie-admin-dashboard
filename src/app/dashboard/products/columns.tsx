@@ -101,7 +101,9 @@ export const columns: ColumnDef<Sales>[] = [
                                 Close
                             </Button>
                         </DialogClose>
-                        <Button type="submit" onClick={() => handleDelete(row)}>Confirm</Button >
+                        <DialogClose asChild>
+                            <Button type="submit" onClick={() => handleDelete(row)}>Confirm</Button >
+                        </DialogClose>
                     </DialogFooter>
                 </DialogContent>
             </Dialog >
