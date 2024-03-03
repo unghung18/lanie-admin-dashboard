@@ -68,10 +68,12 @@ export function FormAddProduct() {
 
     const [isMounted, setIsMounted] = useState(false);
     const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>([]);
+    const [loading, setLoading] = useState<Boolean>(false);
 
     const router = useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         const sizeData = values.sizes.map((item: any) => (
             `${item.value}`
         ))
@@ -110,6 +112,7 @@ export function FormAddProduct() {
             router.push("/dashboard/products")
             form.reset();
         }
+        setLoading(false);
     }
     const onupload = (result: any) => {
 
@@ -272,7 +275,12 @@ export function FormAddProduct() {
                             </div>
                         </CardContent>
                     </Card>
-                    <Button type="submit">Submit</Button>
+                    {
+                        loading ?
+                            <Button disabled={true}><span className="loader"></span></Button>
+                            :
+                            <Button type="submit">Submit</Button>
+                    }
                 </form>
             </Form>
         </>

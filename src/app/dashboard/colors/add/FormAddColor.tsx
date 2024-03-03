@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { addColor } from "@/app/actions"
 import { toast } from "react-toastify";
+import { useState } from "react"
 
 const formSchema = z.object({
     name: z.string(),
@@ -25,6 +26,7 @@ const formSchema = z.object({
 
 export function FormAddColor() {
     // 1. Define your form.
+    const [loading, setLoading] = useState<Boolean>(false);
 
     const router = useRouter();
 
@@ -37,13 +39,13 @@ export function FormAddColor() {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         const res = await addColor(values);
 
         if (res.error) {
             toast.error(res.error.message, {
                 theme: "colored"
             })
-
         }
         else {
             toast.success(res.message, {
@@ -52,6 +54,7 @@ export function FormAddColor() {
             router.push("/dashboard/colors")
             form.reset();
         }
+        setLoading(false);
     }
 
     return (
@@ -88,8 +91,12 @@ export function FormAddColor() {
                         )}
                     />
                 </div>
-
-                <Button type="submit">Add Color</Button>
+                {
+                    loading ?
+                        <Button disabled={true}><span className="loader"></span></Button>
+                        :
+                        <Button type="submit">Add Color</Button>
+                }
             </form>
         </Form>
     )

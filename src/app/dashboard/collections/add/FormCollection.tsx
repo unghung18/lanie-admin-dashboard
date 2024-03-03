@@ -51,10 +51,12 @@ export function FormCollection() {
 
     const [isMounted, setIsMounted] = useState(false);
     const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>([]);
+    const [loading, setLoading] = useState<Boolean>(false);
 
     const router = useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
 
         const collectionImages = imagesData.map((item: any) => (
             `${item.image}`
@@ -64,8 +66,6 @@ export function FormCollection() {
             `${item._id}`
         ))
 
-        console.log(values)
-
         const newData = {
             title: values?.title,
             description: values?.description,
@@ -73,10 +73,8 @@ export function FormCollection() {
             products: productData,
             images: collectionImages
         }
-        console.log(newData)
 
         const res = await addCollection(newData)
-        console.log(res)
         if (res.error) {
             toast.error(res.error.message, {
                 theme: "colored"
@@ -90,6 +88,7 @@ export function FormCollection() {
             router.push("/dashboard/collections")
             form.reset();
         }
+        setLoading(false);
     }
     const onupload = (result: any) => {
         const image = imagesData
@@ -201,7 +200,12 @@ export function FormCollection() {
                             </div>
                         </CardContent>
                     </Card>
-                    <Button type="submit">Submit</Button>
+                    {
+                        loading ?
+                            <Button disabled={true}><span className="loader"></span></Button>
+                            :
+                            <Button type="submit">Submit</Button>
+                    }
                 </form>
             </Form>
         </>

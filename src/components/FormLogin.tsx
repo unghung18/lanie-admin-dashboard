@@ -29,6 +29,9 @@ const formSchema = z.object({
 })
 
 export function FormLogin() {
+
+    const [loading, setLoading] = useState<Boolean>(false);
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -42,7 +45,8 @@ export function FormLogin() {
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+        setLoading(true);
+
         const res = await login(values);
         if (res.error) {
             toast.error(res.error.message, {
@@ -59,6 +63,7 @@ export function FormLogin() {
                     theme: "colored"
                 })
             }
+            setLoading(false);
         }
     }
 
@@ -100,8 +105,12 @@ export function FormLogin() {
                                         </FormItem>
                                     )}
                                 />
-
-                                <Button type="submit" className="bg-[#63d7b0] rounded-xl text-white py-2 hover:scale-105 duration-300">Submit</Button>
+                                {
+                                    loading ?
+                                        <Button disabled={true}><span className="loader"></span></Button>
+                                        :
+                                        <Button type="submit" className="bg-[#63d7b0] rounded-xl text-white py-2 hover:scale-105 duration-300">Submit</Button>
+                                }
                             </form>
                         </Form>
 

@@ -91,10 +91,12 @@ export function FormEditProduct({ data, id }: {
 
     const [isMounted, setIsMounted] = useState(false);
     const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>(oldImageSelects);
+    const [loading, setLoading] = useState<Boolean>(false);
 
     const router = useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         const sizeData = values.sizes.map((item: any) => (
             `${item.value}`
         ))
@@ -134,6 +136,7 @@ export function FormEditProduct({ data, id }: {
             })
             router.push("/dashboard/products")
         }
+        setLoading(false);
     }
     const onupload = (result: any) => {
 
@@ -296,7 +299,13 @@ export function FormEditProduct({ data, id }: {
                             </div>
                         </CardContent>
                     </Card>
-                    <Button type="submit">Submit</Button>
+
+                    {
+                        loading ?
+                            <Button disabled={true}><span className="loader"></span></Button>
+                            :
+                            <Button type="submit">Submit</Button>
+                    }
                 </form>
             </Form>
         </>
