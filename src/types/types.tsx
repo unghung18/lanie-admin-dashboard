@@ -43,7 +43,8 @@ export type addProductProps = {
     description: string;
     sizes: any;
     price: number;
-    quantity: number;
+    category: string;
+    totalQuantity: number;
     colors: any;
     tags: string[];
     sale: number;

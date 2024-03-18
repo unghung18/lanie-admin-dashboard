@@ -31,7 +31,8 @@ const formSchema = z.object({
     sizes: z.any(),
     description: z.string(),
     price: z.string(),
-    quantity: z.string(),
+    totalQuantity: z.string(),
+    category: z.string(),
     colors: z.any(),
     tags: z.string(),
     sale: z.enum(["0", "10", "20", "30", "40"]),
@@ -59,10 +60,11 @@ export function FormAddProduct() {
             sizes: [],
             description: "",
             price: "",
-            quantity: "",
+            totalQuantity: "",
             colors: [],
             tags: "",
             sale: "0",
+            category: ""
         },
     })
 
@@ -75,7 +77,10 @@ export function FormAddProduct() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
         const sizeData = values.sizes.map((item: any) => (
-            `${item.value}`
+            {
+                name: `${item.value}`,
+                quantity: 10
+            }
         ))
 
         const productImages = imagesData.map((item: any) => (
@@ -91,12 +96,15 @@ export function FormAddProduct() {
             description: values?.description,
             sizes: sizeData,
             price: Number(values?.price),
-            quantity: Number(values?.quantity),
+            totalQuantity: Number(values?.totalQuantity),
             sale: Number(values?.sale),
             tags: values.tags.split(", "),
             colors: colorData,
-            images: productImages
+            images: productImages,
+            category: values.category
         }
+
+        console.log(newData);
 
         const res = await addProduct(newData)
         if (res.error) {
@@ -191,7 +199,7 @@ export function FormAddProduct() {
                         />
                         <FormField
                             control={form.control}
-                            name="quantity"
+                            name="totalQuantity"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
                                     <FormLabel>Quantity</FormLabel>
@@ -236,6 +244,19 @@ export function FormAddProduct() {
                                     <FormLabel>SALE</FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 10%" {...field} type="number" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }: { field: any }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>CATEGORY</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="eg: DRESS" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

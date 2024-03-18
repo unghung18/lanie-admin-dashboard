@@ -31,10 +31,11 @@ const formSchema = z.object({
     sizes: z.any(),
     description: z.string(),
     price: z.string(),
-    quantity: z.string(),
+    totalQuantity: z.string(),
     colors: z.any(),
     tags: z.string(),
     sale: z.string(),
+    category: z.string(),
 })
 
 const options = [
@@ -56,10 +57,10 @@ export function FormEditProduct({ data, id }: {
     id: string
 }) {
 
-    const oldSizeSelects = data?.sizes.map((item: string) => {
+    const oldSizeSelects = data?.sizes.map((item: any) => {
         return {
-            label: item.toUpperCase(),
-            value: item
+            label: item.name.toUpperCase(),
+            value: item.name
         }
     })
 
@@ -82,10 +83,11 @@ export function FormEditProduct({ data, id }: {
             sizes: oldSizeSelects,
             description: data.description,
             price: data.price.toString(),
-            quantity: data.quantity.toString(),
+            totalQuantity: data.totalQuantity.toString(),
             colors: oldColorSelects,
             tags: data.tags.toString(),
             sale: data.sale.toString(),
+            category: data.category.toString(),
         },
     })
 
@@ -98,7 +100,10 @@ export function FormEditProduct({ data, id }: {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
         const sizeData = values.sizes.map((item: any) => (
-            `${item.value}`
+            {
+                name: `${item.value}`,
+                quantity: 10
+            }
         ))
 
         const productImages = imagesData.map((item: any) => (
@@ -114,11 +119,12 @@ export function FormEditProduct({ data, id }: {
             description: values?.description,
             sizes: sizeData,
             price: Number(values?.price),
-            quantity: Number(values?.quantity),
+            totalQuantity: Number(values?.totalQuantity),
             sale: Number(values?.sale),
             tags: values.tags.split(","),
             colors: colorData,
-            images: productImages
+            images: productImages,
+            category: values.category
         }
 
         console.log(newData)
@@ -215,7 +221,7 @@ export function FormEditProduct({ data, id }: {
                         />
                         <FormField
                             control={form.control}
-                            name="quantity"
+                            name="totalQuantity"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
                                     <FormLabel>Quantity</FormLabel>
@@ -260,6 +266,19 @@ export function FormEditProduct({ data, id }: {
                                     <FormLabel>SALE</FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 10%" {...field} type="number" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }: { field: any }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Category</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="eg: Dress"{...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
