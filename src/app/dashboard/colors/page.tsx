@@ -9,7 +9,7 @@ import { getColors } from '@/api/lanieApi';
 async function getData(): Promise<Colors[]> {
     // Fetch data from your API here.
 
-    const res = await getColors("")
+    const res = await getColors("");
     return res.data
 }
 

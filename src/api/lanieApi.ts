@@ -33,6 +33,7 @@ export async function updateUser(id: string, body: {
 
 export async function getColors(search: string) {
     const res = await fetch(`${baseUrl}api/colors?search=${search}`, {
+        next: { tags: ['color'] },
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -45,6 +46,7 @@ export async function getColors(search: string) {
 
 export async function getProducts(search: string) {
     const res = await fetch(`${baseUrl}api/products?search=${search}`, {
+        next: { tags: ['product'] },
         method: "GET",
         headers: {
             "Content-Type": "application/json",
