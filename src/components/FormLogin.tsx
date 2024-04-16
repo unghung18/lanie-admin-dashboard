@@ -36,8 +36,8 @@ export function FormLogin() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
-            password: ""
+            email: "admin@gmail.com",
+            password: "admin123"
         },
     })
     const [visible, setVisible] = useState<Boolean>(true);
@@ -47,24 +47,31 @@ export function FormLogin() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
 
-        const res = await login(values);
-        if (res.error) {
-            toast.error(res.error.message, {
-                theme: "colored"
-            })
-        }
-        else {
-            if (res.data.role == 'Admin') {
-                Cookies.set("token", res?.data?.accessKey);
-                router.push("/dashboard")
+        try {
+            const res = await login(values);
+            if (res.data) {
+                if (res.data.role == 'Admin') {
+                    Cookies.set("token", res?.data?.accessKey);
+                    router.push("/dashboard")
+                }
+                else {
+                    toast.error("Unauthorized", {
+                        theme: "colored"
+                    })
+                }
             }
             else {
-                toast.error("Unauthorized", {
+                toast.error(res.error.message, {
                     theme: "colored"
                 })
             }
-            setLoading(false);
+        } catch (error) {
+            toast.error("Something gone wrong", {
+                theme: "colored"
+            })
         }
+
+        setLoading(false);
     }
 
     return (
