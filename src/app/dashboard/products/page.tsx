@@ -5,6 +5,7 @@ import { columns } from './columns';
 import { Sales } from "@/types/types";
 import { ProductDataTable } from './ProductDataTable';
 import { getProducts } from '@/api/lanieApi';
+import Breadcumb from '@/components/Breadcumb';
 
 async function getData(): Promise<Sales[]> {
 
@@ -12,10 +13,19 @@ async function getData(): Promise<Sales[]> {
     return res.data
 }
 
+const prevPage = [
+    {
+        title: "Dashboard",
+        href: "/dashboard"
+    }
+]
+
 const Page = async () => {
     const data = await getData();
     return (
         <>
+            <Breadcumb prevPage={prevPage} currentPage='Product' />
+
             <h2 className="text-3xl font-bold tracking-tight my-4">Products</h2>
             <Card>
                 <CardContent className='py-6 w-full'>

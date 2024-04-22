@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/lib/ThemeProvider";
 
 import { ToastContainer, Slide } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import NextProgressBar from "@/components/NextProgressBar";
 
 const karla = Karla({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800"] });
 
@@ -28,7 +29,11 @@ export default function RootLayout({
             enableSystem
             defaultTheme="light"
             disableTransitionOnChange>
-            <main>{children}</main>
+            <main>
+              <NextProgressBar>
+                {children}
+              </NextProgressBar>
+            </main>
             <ToastContainer
               position="top-right"
               autoClose={1500}

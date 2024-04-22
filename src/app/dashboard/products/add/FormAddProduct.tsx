@@ -4,6 +4,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import Select from 'react-select'
+import { Textarea } from "@/components/ui/textarea"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -27,14 +28,14 @@ import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-    title: z.string().min(2),
-    sizes: z.any(),
-    description: z.string(),
-    price: z.string(),
-    totalQuantity: z.string(),
-    category: z.string(),
-    colors: z.any(),
-    tags: z.string(),
+    title: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    sizes: z.any().array().nonempty({ message: "Trường này là bắt buộc" }),
+    description: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    price: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    totalQuantity: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    category: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    colors: z.any().array().nonempty({ message: "Trường này là bắt buộc" }),
+    tags: z.string().min(1, { message: "Trường này là bắt buộc" }),
     sale: z.enum(["0", "10", "20", "30", "40"]),
 })
 
@@ -54,6 +55,7 @@ interface ImagesDataProps {
 export function FormAddProduct() {
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
+        mode: "onBlur",
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
@@ -140,6 +142,8 @@ export function FormAddProduct() {
 
     useEffect(() => setIsMounted(true), []);
 
+    console.log(form.watch());
+
     return (
         <>
             <Form {...form}>
@@ -150,7 +154,7 @@ export function FormAddProduct() {
                             name="title"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Title</FormLabel>
+                                    <FormLabel>Title <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: Đầm xuông" {...field} />
                                     </FormControl>
@@ -163,9 +167,9 @@ export function FormAddProduct() {
                             name="description"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>Description <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
-                                        <Input placeholder="eg: Đây là sản phẩm ..." {...field} />
+                                        <Textarea placeholder="Type your message here." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -176,7 +180,7 @@ export function FormAddProduct() {
                             name="sizes"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Sizes</FormLabel>
+                                    <FormLabel>Sizes <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         {isMounted && <Select isMulti options={options} {...field} placeholder="Select ..." />}
                                     </FormControl>
@@ -189,7 +193,7 @@ export function FormAddProduct() {
                             name="price"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Price</FormLabel>
+                                    <FormLabel>Price <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 3000000" {...field} type="number" />
                                     </FormControl>
@@ -202,7 +206,7 @@ export function FormAddProduct() {
                             name="totalQuantity"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Quantity</FormLabel>
+                                    <FormLabel>Quantity <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 10" {...field} type="number" />
                                     </FormControl>
@@ -215,7 +219,7 @@ export function FormAddProduct() {
                             name="colors"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Color</FormLabel>
+                                    <FormLabel>Color <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         {isMounted && <ColorSelect field={field} />}
                                     </FormControl>
@@ -228,7 +232,7 @@ export function FormAddProduct() {
                             name="tags"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Tags</FormLabel>
+                                    <FormLabel>Tags <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: dam xuong, đầm xuông" {...field} />
                                     </FormControl>
@@ -254,7 +258,7 @@ export function FormAddProduct() {
                             name="category"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>CATEGORY</FormLabel>
+                                    <FormLabel>CATEGORY <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: DRESS" {...field} />
                                     </FormControl>

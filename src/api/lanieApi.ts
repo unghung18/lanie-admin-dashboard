@@ -45,8 +45,9 @@ export async function getColors(search: string) {
 }
 
 export async function getProducts(search: string) {
-    const res = await fetch(`${baseUrl}api/products?search=${search}`, {
+    const res = await fetch(`${baseUrl}api/products?search=${search}&limit=100`, {
         next: { tags: ['product'] },
+        cache: "no-store",
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -59,6 +60,7 @@ export async function getProducts(search: string) {
 export async function getOneProduct(id: string) {
     const res = await fetch(`${baseUrl}api/products/${id}`, {
         method: "GET",
+        cache: "no-store",
         headers: {
             "Content-Type": "application/json",
             'Authorization': 'Bearer ' + token,

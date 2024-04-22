@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CldUploadWidget } from "next-cloudinary"
 import { MdDelete } from "react-icons/md";
 import { FaCloudUploadAlt } from "react-icons/fa";
@@ -25,17 +25,18 @@ import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 import ColorSelect from "../../add/ColorSelect"
 import { Colors, addProductProps } from "@/types/types"
+import { Textarea } from "@/components/ui/textarea"
 
 const formSchema = z.object({
-    title: z.string().min(2),
-    sizes: z.any(),
-    description: z.string(),
-    price: z.string(),
-    totalQuantity: z.string(),
-    colors: z.any(),
-    tags: z.string(),
+    title: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    sizes: z.any().array().nonempty({ message: "Trường này là bắt buộc" }),
+    description: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    price: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    totalQuantity: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    category: z.string().min(1, { message: "Trường này là bắt buộc" }),
+    colors: z.any().array().nonempty({ message: "Trường này là bắt buộc" }),
+    tags: z.string().min(1, { message: "Trường này là bắt buộc" }),
     sale: z.string(),
-    category: z.string(),
 })
 
 const options = [
@@ -49,8 +50,6 @@ interface ImagesDataProps {
     filename: string;
     image: string;
 }
-
-
 
 export function FormEditProduct({ data, id }: {
     data: addProductProps,
@@ -77,6 +76,7 @@ export function FormEditProduct({ data, id }: {
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
+        mode: "onBlur",
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: data.title,
@@ -95,6 +95,8 @@ export function FormEditProduct({ data, id }: {
     const [imagesData, setImagesData] = useState<Array<ImagesDataProps>>(oldImageSelects);
     const [loading, setLoading] = useState<Boolean>(false);
 
+    const dragProductItem = useRef<number>(0);
+    const dragOverProductItem = useRef<number>(0);
     const router = useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -144,6 +146,7 @@ export function FormEditProduct({ data, id }: {
         }
         setLoading(false);
     }
+
     const onupload = (result: any) => {
 
         const image = imagesData
@@ -160,6 +163,14 @@ export function FormEditProduct({ data, id }: {
         setImagesData([...filteredItems])
     }
 
+    const handleSortImage = () => {
+        const imagesClone = [...imagesData];
+        const temp = imagesClone[dragProductItem.current]
+        imagesClone[dragProductItem.current] = imagesClone[dragOverProductItem.current]
+        imagesClone[dragOverProductItem.current] = temp;
+        setImagesData(imagesClone);
+    }
+
     useEffect(() => setIsMounted(true), []);
 
     return (
@@ -172,7 +183,7 @@ export function FormEditProduct({ data, id }: {
                             name="title"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Title</FormLabel>
+                                    <FormLabel>Title <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: Đầm xuông" {...field} />
                                     </FormControl>
@@ -185,9 +196,9 @@ export function FormEditProduct({ data, id }: {
                             name="description"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>Description <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
-                                        <Input placeholder="eg: Đây là sản phẩm ..." {...field} />
+                                        <Textarea placeholder="Type your description here." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -198,7 +209,7 @@ export function FormEditProduct({ data, id }: {
                             name="sizes"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Sizes</FormLabel>
+                                    <FormLabel>Sizes <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         {isMounted && <Select isMulti options={options} {...field} placeholder="Select ..." />}
                                     </FormControl>
@@ -211,7 +222,7 @@ export function FormEditProduct({ data, id }: {
                             name="price"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Price</FormLabel>
+                                    <FormLabel>Price <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 3000000" {...field} type="number" />
                                     </FormControl>
@@ -224,7 +235,7 @@ export function FormEditProduct({ data, id }: {
                             name="totalQuantity"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Quantity</FormLabel>
+                                    <FormLabel>Quantity <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: 10" {...field} type="number" />
                                     </FormControl>
@@ -237,7 +248,7 @@ export function FormEditProduct({ data, id }: {
                             name="colors"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Color</FormLabel>
+                                    <FormLabel>Color <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         {isMounted && <ColorSelect field={field} />}
                                     </FormControl>
@@ -250,7 +261,7 @@ export function FormEditProduct({ data, id }: {
                             name="tags"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Tags</FormLabel>
+                                    <FormLabel>Tags <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: dam xuong, đầm xuông" {...field} />
                                     </FormControl>
@@ -276,7 +287,7 @@ export function FormEditProduct({ data, id }: {
                             name="category"
                             render={({ field }: { field: any }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel>Category</FormLabel>
+                                    <FormLabel>Category <span className="text-[red]">*</span></FormLabel>
                                     <FormControl>
                                         <Input placeholder="eg: Dress"{...field} />
                                     </FormControl>
@@ -305,7 +316,15 @@ export function FormEditProduct({ data, id }: {
                                 </CldUploadWidget>
                                 <div className="h-[300px] overflow-auto space-y-4">
                                     {imagesData?.map((image: any, i: number) => (
-                                        <div key={i} className="grid grid-cols-3 items-center gap-2 rounded-[5px] overflow-hidden border-[1px] border-gray-300">
+                                        <div
+                                            key={i}
+                                            className="grid grid-cols-3 items-center gap-2 rounded-[5px] overflow-hidden border-[1px] border-gray-300"
+                                            draggable
+                                            onDragStart={() => dragProductItem.current = i}
+                                            onDragEnter={() => dragOverProductItem.current = i}
+                                            onDragEnd={handleSortImage}
+                                            onDragOver={(e) => e.preventDefault()}
+                                        >
                                             <img src={image.image} alt="product image" className='w-[50px] md:w-[70px]' />
                                             <span className='flex-1'>{image.filename.charAt(0).toUpperCase() + image.filename.slice(1)}</span>
                                             <div className='w-[30px] h-[30px] flex justify-center items-center border-[2px] border-gray-400 mr-2 rounded-sm' onClick={() => handleDeleteFile(image)}>
