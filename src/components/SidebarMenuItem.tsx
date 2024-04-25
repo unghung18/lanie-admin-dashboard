@@ -21,7 +21,7 @@ export const SidebarMenuItem = ({ item }: { item: SideNavItem }) => {
         <>
             {item.submenu ? (
                 <div className="min-w-[18px]">
-                    <a className={`flex items-center min-h-[40px] h-full text-sidebar-foreground py-2 px-4 hover:text-sidebar-muted-foreground  hover:bg-sidebar-muted rounded-md transition duration-200 ${subMenuOpen && "bg-sidebar-muted rounded-b-none"} ${pathname.includes(item.path) ? "active text-sidebar-muted-foreground bg-sidebar-muted" : ''}`}
+                    <a className={`flex items-center cursor-pointer min-h-[40px] h-full text-sidebar-foreground py-2 px-4 hover:text-sidebar-muted-foreground  hover:bg-sidebar-muted rounded-md transition duration-200 ${subMenuOpen && "bg-sidebar-muted rounded-b-none"} ${pathname.includes(item.path) ? "active text-sidebar-muted-foreground bg-sidebar-muted" : ''}`}
                         onClick={toggleSubMenu}>
                         {item.icon}
                         {!toggleCollapse && <>

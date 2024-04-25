@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation'
 import { FaSearch } from "react-icons/fa";
+import Link from "next/link";
 
 
 interface DataTableProps<TData, TValue> {
@@ -52,6 +53,7 @@ export function ColorDataTable<TData, TValue>({ data, columns, filterBy, inputPl
                 "pageIndex": 0,
             }
         },
+        autoResetPageIndex: false,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -87,7 +89,7 @@ export function ColorDataTable<TData, TValue>({ data, columns, filterBy, inputPl
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={() => router.push('colors/add')}>New Color</Button>
+                    <Button><Link href="colors/add">New Color</Link></Button>
                 </div>
 
                 <div className="flex items-center space-x-2">

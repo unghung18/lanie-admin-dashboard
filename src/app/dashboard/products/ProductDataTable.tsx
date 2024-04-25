@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation'
 import { FaSearch } from "react-icons/fa";
+import Link from "next/link";
 
 
 interface DataTableProps<TData, TValue> {
@@ -52,6 +53,7 @@ export function ProductDataTable<TData, TValue>({ data, columns, filterBy, input
                 "pageIndex": 0,
             }
         },
+        autoResetPageIndex: false,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -87,7 +89,7 @@ export function ProductDataTable<TData, TValue>({ data, columns, filterBy, input
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={() => router.push('products/add')}>New Product</Button>
+                    <Button><Link href="products/add">New Product</Link></Button>
                 </div>
 
                 <div className="flex items-center space-x-2">

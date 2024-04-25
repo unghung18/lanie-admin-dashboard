@@ -8,7 +8,7 @@ const NextProgressBar = ({ children }: { children: React.ReactNode }) => {
             {children}
             <ProgressBar
                 height="4px"
-                color="#fffd00"
+                color="red"
                 options={{ showSpinner: false }}
                 shallowRouting
             />

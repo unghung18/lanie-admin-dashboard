@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import {
     Breadcrumb,
@@ -27,14 +28,14 @@ const Breadcumb = ({
                 {
                     prevPage.map((item, index) => (
                         <>
-                            <BreadcrumbItem>
+                            <BreadcrumbItem key={item.title}>
                                 <BreadcrumbLink asChild>
                                     <Link href={item.href}>
                                         {item.title}
                                     </Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbSeparator key={index} />
                         </>
                     ))
                 }
@@ -42,7 +43,7 @@ const Breadcumb = ({
                     <BreadcrumbPage>{currentPage}</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
-        </Breadcrumb>
+        </Breadcrumb >
     )
 }
 

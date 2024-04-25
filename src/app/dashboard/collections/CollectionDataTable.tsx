@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation'
 import { FaSearch } from "react-icons/fa";
+import Link from "next/link";
 
 
 interface DataTableProps<TData, TValue> {
@@ -87,7 +88,7 @@ export function CollectionDataTable<TData, TValue>({ data, columns, filterBy, in
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={() => router.push('collections/add')}>New Collection</Button>
+                    <Button><Link href="collections/add">New Collection</Link></Button>
                 </div>
 
                 <div className="flex items-center space-x-2">
