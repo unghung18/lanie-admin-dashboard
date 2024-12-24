@@ -1,6 +1,8 @@
 import Cookies from "js-cookie";
 
-const baseUrl = "https://lanie-backend-mongodb.onrender.com/"
+// const baseUrl = "https://lanie-backend-mongodb.onrender.com/"
+const baseUrl = "http://localhost:8080/"
+
 const token = Cookies.get('token')
 
 export async function getProfile() {
@@ -57,6 +59,21 @@ export async function getProducts(search: string) {
     const data = await res.json();
     return data
 }
+
+export async function getAccounts() {
+    const res = await fetch(`${baseUrl}api/users`, {
+        next: { tags: ['users'] },
+        cache: "no-store",
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + token,
+        },
+    })
+    const data = await res.json();
+    return data
+}
+
 export async function getOneProduct(id: string) {
     const res = await fetch(`${baseUrl}api/products/${id}`, {
         method: "GET",
