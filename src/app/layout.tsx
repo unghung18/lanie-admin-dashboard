@@ -1,14 +1,11 @@
-import type { Metadata } from "next";
-import { Karla } from "next/font/google";
-import ReduxProvider from "@/redux/provider";
-import { ThemeProvider } from "@/lib/ThemeProvider";
-import { ToastContainer, Slide } from "react-toastify";
 import NextProgressBar from "@/components/NextProgressBar";
+import { ThemeProvider } from "@/lib/ThemeProvider";
+import ReduxProvider from "@/redux/provider";
+import type { Metadata } from "next";
+import { Slide, ToastContainer } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-import 'react-toastify/dist/ReactToastify.css';
-
-const karla = Karla({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
   title: "Lanie Dashboard",
@@ -22,17 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={karla.className}>
+      <body>
         <ReduxProvider>
           <ThemeProvider
-            themes={['light', 'dark']}
+            themes={["light", "dark"]}
             enableSystem
             defaultTheme="light"
-            disableTransitionOnChange>
+            disableTransitionOnChange
+          >
             <main>
-              <NextProgressBar>
-                {children}
-              </NextProgressBar>
+              <NextProgressBar>{children}</NextProgressBar>
             </main>
             <ToastContainer
               position="top-right"
