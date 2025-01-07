@@ -135,8 +135,8 @@ const Page = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orderDetail?.products?.map((item: any) => (
-                    <TableRow>
+                  {orderDetail?.products?.map((item: any, index: number) => (
+                    <TableRow key={index}>
                       <TableCell className="font-medium">
                         <img
                           width={50}
