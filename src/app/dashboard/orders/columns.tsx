@@ -1,30 +1,31 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import moment from "moment";
 
 const colorText = (text: string) => {
   if (text === "PENDING") {
     return (
       <div className="text-[#F89E19] font-semibold px-4 py-2 rounded-lg bg-[#f7e5cb] min-w-[80px] text-center">
-        Pending
+        Chờ xác nhận
       </div>
     );
   } else if (text === "PROCESSING") {
     return (
       <div className="text-[#0078D4] font-semibold px-4 py-2 rounded-lg bg-[#95d1ff] min-w-[80px] text-center">
-        Processing
+        Đang xử lý
       </div>
     );
   } else if (text === "COMPLETED") {
     return (
       <div className="text-[#00CC6A] font-semibold px-4 py-2 rounded-lg bg-[#a1ffd2] min-w-[80px] text-center">
-        Completed
+        Hoàn thành
       </div>
     );
   } else if (text === "CANCELLED") {
     return (
       <div className="text-[#FF0000] font-semibold px-4 py-2 rounded-lg bg-[#ffa7a7] min-w-[80px] text-center">
-        Cancelled
+        Đã Hủy
       </div>
     );
   } else {
@@ -43,24 +44,30 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     accessorKey: "_id",
-    header: "Order ID",
+    header: "Mã đơn hàng",
+  },
+  {
+    accessorKey: "customer_name",
+    header: "Tên khách hàng",
   },
   {
     accessorKey: "shipping_address",
-    header: "Address",
+    header: "Địa chỉ",
   },
   {
     accessorKey: "order_date",
-    header: "Order Date",
+    header: "Ngày đặt hàng",
+    cell: (row) =>
+      `${moment(row.row.original.order_date).format("DD-MM-YYYY")}`,
   },
   {
     accessorKey: "total_amount",
-    header: "Price",
+    header: "Giá",
     cell: (row) => `${row.row.original.total_amount.toLocaleString()}₫`,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Trạng thái",
     cell: (row) => colorText(row.row.original.status),
   },
 ];

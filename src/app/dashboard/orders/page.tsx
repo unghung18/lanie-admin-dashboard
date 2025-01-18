@@ -1,16 +1,12 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 
 import { getOrders } from "@/api/lanieApi";
 import Breadcumb from "@/components/Breadcumb";
+import { useEffect, useState } from "react";
 import { OrderDataTable } from "./OrderDataTable";
 import { columns } from "./columns";
-
-async function getData(): Promise<any[]> {
-  // Fetch data from your API here.
-
-  const res = await getOrders();
-  return res.data;
-}
 
 const prevPage = [
   {
@@ -19,8 +15,21 @@ const prevPage = [
   },
 ];
 
-const Page = async () => {
-  const data = await getData();
+const Page = () => {
+  const [dataValue, setDataValue] = useState<any>([]);
+
+  async function getData() {
+    try {
+      const { data } = await getOrders();
+      setDataValue(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <>
       <Breadcumb prevPage={prevPage} currentPage="Orders" />
@@ -28,7 +37,7 @@ const Page = async () => {
       <Card>
         <CardContent className="py-6 w-full">
           <OrderDataTable
-            data={data}
+            data={dataValue ?? []}
             columns={columns}
             filterBy="name"
             inputPlaceholder="Filter Order"

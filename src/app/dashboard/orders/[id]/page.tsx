@@ -23,6 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { change } from "@/redux/slices/staticalCollapseSlice";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -34,6 +36,9 @@ const Page = ({
   };
 }) => {
   const [orderDetail, setOrderDetail] = useState<any>(null);
+
+  const dispatch = useAppDispatch();
+  const { totalDayRevenue } = useAppSelector((state) => state.staticalCollapse);
 
   async function getData(): Promise<any> {
     const { data } = await getOneOrder(params.id);
@@ -93,10 +98,14 @@ const Page = ({
       <h2 className="text-3xl font-bold tracking-tight my-4">View Order</h2>
       <Card>
         <CardContent className="py-6 w-full h-full">
-          <div className="text-center text-[20px] font-semibold uppercase font-mono mb-10">
-            Chi tiết đơn hàng
+          <div
+            className="text-center text-[20px] font-semibold uppercase font-mono mb-10"
+            onClick={() => {
+              dispatch(change());
+            }}
+          >
+            Chi tiết đơn hàng{totalDayRevenue !== 3198000 ? "g" : ""}
           </div>
-
           <div className="grid grid-cols-2 gap-20 mb-10">
             <div className="flex flex-col space-y-2">
               <div className="text-[#5388c1] text-[18px] font-semibold mb-4">
@@ -114,7 +123,6 @@ const Page = ({
               <span>Địa chỉ: {orderDetail?.shipping_address}</span>
             </div>
           </div>
-
           <div className="flex flex-col space-y-2">
             <div className="text-[#5388c1] text-[18px] font-semibold mb-4">
               Chi tiết đơn hàng
@@ -172,7 +180,6 @@ const Page = ({
               Tổng cộng: {`${orderDetail?.total_amount.toLocaleString()}₫`}
             </span>
           </div>
-
           <div className="grid grid-cols-2 gap-20 my-10">
             <div className="flex flex-col space-y-2 items-center">
               <div className="text-[#5388c1] text-[18px] font-semibold mb-1">
@@ -233,7 +240,10 @@ const Page = ({
                   <AlertDialogFooter>
                     <AlertDialogCancel>Hủy</AlertDialogCancel>
                     <AlertDialogAction
-                      onClick={() => updateStatusOrder("COMPLETED")}
+                      onClick={() => {
+                        updateStatusOrder("COMPLETED");
+                        dispatch(change());
+                      }}
                     >
                       Đồng ý
                     </AlertDialogAction>

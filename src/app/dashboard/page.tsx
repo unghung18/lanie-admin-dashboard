@@ -1,3 +1,4 @@
+"use client";
 import { Overview } from "@/components/Overview";
 import { RecentSales } from "@/components/RecentSales";
 import {
@@ -7,8 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function Page() {
+  const { totalDayRevenue, totalRevenue, sale } = useAppSelector(
+    (state) => state.staticalCollapse
+  );
+
   return (
     <>
       <h2 className="text-3xl font-bold tracking-tight my-4">Dashboard</h2>
@@ -18,7 +24,7 @@ export default function Page() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total Revenue
+                Tổng doanh thu
               </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -34,9 +40,12 @@ export default function Page() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">
+                {totalRevenue.toLocaleString()}₫
+              </div>
               <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+                +{(((totalRevenue - 959000) / 959000) * 100).toFixed(2)}% so với
+                tháng trước
               </p>
             </CardContent>
           </Card>
@@ -44,7 +53,7 @@ export default function Page() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Subscriptions
+                Doanh thu theo ngày
               </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -62,15 +71,20 @@ export default function Page() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
+              <div className="text-2xl font-bold">
+                +{totalDayRevenue.toLocaleString()}₫
+              </div>
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
+                +{(((totalDayRevenue - 700000) / 700000) * 100).toFixed(2)}% so
+                với ngày hôm qua
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Sản phẩm đã bán
+              </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -86,15 +100,17 @@ export default function Page() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
+              <div className="text-2xl font-bold">+{sale}</div>
               <p className="text-xs text-muted-foreground">
-                +19% from last month
+                +{(((sale - 2) / 2) * 100).toFixed(2)}% so với tháng trước
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Người đăng ký
+              </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -109,9 +125,9 @@ export default function Page() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
+              <div className="text-2xl font-bold">+3</div>
               <p className="text-xs text-muted-foreground">
-                +201 since last hour
+                +0 kể từ một giờ trước
               </p>
             </CardContent>
           </Card>
@@ -119,7 +135,7 @@ export default function Page() {
         <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-7">
           <Card className="lg:col-span-4">
             <CardHeader>
-              <CardTitle>Overview</CardTitle>
+              <CardTitle>Tổng quan</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
               <Overview />
@@ -127,8 +143,10 @@ export default function Page() {
           </Card>
           <Card className="lg:col-span-3">
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
-              <CardDescription>You made 265 sales this month.</CardDescription>
+              <CardTitle>Sản phẩm đã bán gần đây</CardTitle>
+              <CardDescription>
+                Bán đã bán 3 sản phẩm trong tháng này
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <RecentSales />
